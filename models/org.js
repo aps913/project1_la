@@ -15,11 +15,10 @@ module.exports = function(sequelize, DataTypes) {
       validate: {
         notEmpty: true // <--- validates presence
       }
-    }
-  // },
-  //   orgName: DataTypes.STRING,
-  //   contactPerson: DataTypes.STRING,
-  //   email: DataTypes.STRING
+    },
+    orgName: DataTypes.STRING,
+    contactPerson: DataTypes.STRING,
+    email: DataTypes.STRING
   }, {
     instanceMethods: {
       checkPassword: function(password) {
@@ -31,12 +30,12 @@ module.exports = function(sequelize, DataTypes) {
         var hash = bcrypt.hashSync(password, salt);
         return hash;
       },
-      createSecure: function(email, password) {
+      createSecure: function(username, password) {
         if(password.length < 6) {
           throw new Error("Password too short");
         }
         return this.create({
-          email: email,
+          username: username,
           passwordDigest: this.encryptPassword(password)
         });
 
@@ -54,6 +53,8 @@ module.exports = function(sequelize, DataTypes) {
           }
           else if (user.checkPassword(password)){
             return user;
+          } else {
+            return "THE PASSWORD";
           }
 
         });

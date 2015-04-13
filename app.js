@@ -2,7 +2,8 @@
 var express = require("express"),
     ejs = require("ejs"),
     bodyParser = require("body-parser"),
-    methodOverride = require("method-override");
+    methodOverride = require("method-override")
+    session = require("express-session");
 
 // Now instantiate our express app:
 var app = express();
@@ -16,46 +17,79 @@ app.use(bodyParser.urlencoded({extended: true}));
 // Set up method override to work with POST requests that have the parameter "_method=DELETE"
 app.use(methodOverride('_method'))
 
-
 var db = require("./models");
 
-// Let's add some routes here together:
-app.get('/', function (req, res) {
-   res.render("index"); // We use res.render to display an EJS file instead of res.send() 
+app.use(session({
+  secret: 'super secret',
+  resave: false,
+  saveUninitialized: true
+}))
+
+app.use("/", function (req, res, next) {
+	req.login = function (user) {
+    req.session.userId = user.id;
+  };
+
+  req.currentUser = function () {
+    return db.User.
+      find({
+        where: {
+          id: req.session.userId
+       }
+      }).
+      then(function (user) {
+        req.user = user;
+        return user;
+      })
+  };
+
+  req.logout = function () {
+    req.session.userId = null;
+    req.user = null;
+  }
+
+  next(); 
 });
 
-// this tells us we will need a `views/login` file
+
+app.get('/', function (req, res) {
+   res.render("index"); 
+});
+
 app.get("/login", function (req, res) {
   res.render("login");
 });
 
-// this where the form goes
 app.post("/login", function (req, res) {
-    var user = req.body.user;
+    var user = req.body.org.username;
+    var pass = req.body.org.password;
+    console.log("REQ.body", req.body);
     
     db.Org.
-    authenticate(user.email, user.password).
-    then(function (user) {
-        req.login(user);
+    authenticate(user, pass).
+    then(function (dbUser) {
+        req.login(dbUser);
         res.redirect("/organization");
     });
 })
 
-app.get("/organization", function (req, res) {
-  req.currentUser()
-    .then(function (user) {
-      res.render("/organization", {user: user});
-    })
-});
+// app.get("/organization", function (req, res) {
+//   req.currentUser()
+//     .then(function (user) {
+//       res.render("/organization", {username: username});
+//     })
+// });
 
 app.get('/organization', function(req,res) {
-	// First page of data input where organizations input/ update their company admin data into the "Org" table
-	db.Article.all() // then I render the article index template
-	  .then(function(batman){ // With articlesList as dbArticles
-	  	res.render('articles/index', {articlesList: batman});
-	  })
-  console.log("GET /articles");
+	res.render("organization");
 });
+	// First page of data input where organizations input/ update their company admin data into the "Org" table
+	// db.Article.all() // then I render the article index template
+	//   .then(function(batman){ // With articlesList as dbArticles
+	//   	res.render('articles/index', {articlesList: batman});
+	//   })
+//   console.log("GET /articles");
+// });
 
 app.post('/organization', function(req,res) {
 	var article = req.body.article;
@@ -67,13 +101,15 @@ app.post('/organization', function(req,res) {
 });
 
 app.get('/demographics', function(req,res) {
-	// First page of data input where organizations input/ update their company admin data into the "Org" table
-	db.Article.all() // then I render the article index template
-	  .then(function(batman){ // With articlesList as dbArticles
-	  	res.render('articles/index', {articlesList: batman});
-	  })
-  console.log("Loaded demographics");
+	  res.render("demographics");
 });
+// 	// First page of data input where organizations input/ update their company admin data into the "Org" table
+// 	db.Article.all() // then I render the article index template
+// 	  .then(function(batman){ // With articlesList as dbArticles
+// 	  	res.render('articles/index', {articlesList: batman});
+// 	  })
+//   console.log("Loaded demographics");
+// });
 
 app.post('/demographics', function(req,res) {
 	var article = req.body.article;
@@ -85,13 +121,15 @@ app.post('/demographics', function(req,res) {
 });
 
 app.get('/progress', function(req,res) {
-	// First page of data input where organizations input/ update their company admin data into the "Org" table
-	db.Article.all() // then I render the article index template
-	  .then(function(batman){ // With articlesList as dbArticles
-	  	res.render('articles/index', {articlesList: batman});
-	  })
-  console.log("GET /articles");
+	res.render("progress");
 });
+	// First page of data input where organizations input/ update their company admin data into the "Org" table
+// 	db.Article.all() // then I render the article index template
+// 	  .then(function(batman){ // With articlesList as dbArticles
+// 	  	res.render('articles/index', {articlesList: batman});
+// 	  })
+//   console.log("GET /articles");
+// });
 
 app.post('/progress', function(req,res) {
 	var article = req.body.article;
@@ -100,11 +138,6 @@ app.post('/progress', function(req,res) {
 	  	res.redirect('/articles');
 	  })
   console.log(req.body);
-});
-
-
-app.get('/', function(req,res) {
-  res.render('index.ejs');
 });
 
 app.get('/about', function(req,res) {
