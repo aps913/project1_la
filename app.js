@@ -24,9 +24,32 @@ app.get('/', function (req, res) {
    res.render("index"); // We use res.render to display an EJS file instead of res.send() 
 });
 
+// this tells us we will need a `views/login` file
+app.get("/login", function (req, res) {
+  res.render("login");
+});
 
-app.get('/articles', function(req,res) {
-	// Find all the Atricles
+// this where the form goes
+app.post("/login", function (req, res) {
+    var user = req.body.user;
+    
+    db.Org.
+    authenticate(user.email, user.password).
+    then(function (user) {
+        req.login(user);
+        res.redirect("/organization");
+    });
+})
+
+app.get("/organization", function (req, res) {
+  req.currentUser()
+    .then(function (user) {
+      res.render("/organization", {user: user});
+    })
+});
+
+app.get('/organization', function(req,res) {
+	// First page of data input where organizations input/ update their company admin data into the "Org" table
 	db.Article.all() // then I render the article index template
 	  .then(function(batman){ // With articlesList as dbArticles
 	  	res.render('articles/index', {articlesList: batman});
@@ -34,11 +57,7 @@ app.get('/articles', function(req,res) {
   console.log("GET /articles");
 });
 
-app.get('/articles/new', function(req,res) {
-  res.render('articles/new');
-});
-
-app.post('/articles', function(req,res) {
+app.post('/organization', function(req,res) {
 	var article = req.body.article;
 	db.Article.create(article)
 	  .then(function(dbArticle){
@@ -47,58 +66,42 @@ app.post('/articles', function(req,res) {
   console.log(req.body);
 });
 
-app.get('/articles/:id', function(req, res) {
-	var id = req.params.id;
-	db.Article.find(id)
-	  .then(function(dbArticle){
-	  	res.render('articles/article', {batman: dbArticle});
-	  });  
+app.get('/demographics', function(req,res) {
+	// First page of data input where organizations input/ update their company admin data into the "Org" table
+	db.Article.all() // then I render the article index template
+	  .then(function(batman){ // With articlesList as dbArticles
+	  	res.render('articles/index', {articlesList: batman});
+	  })
+  console.log("Loaded demographics");
 });
 
-app.get('/articles/:id/edit', function(req,res){
-	var id = req.params.id;
-
-	db.Article.find(id)
+app.post('/demographics', function(req,res) {
+	var article = req.body.article;
+	db.Article.create(article)
 	  .then(function(dbArticle){
-	  	res.render('articles/edit',{article: dbArticle});
-	  });
+	  	res.redirect('/articles');
+	  })
+  console.log(req.body);
 });
 
-app.put('/articles/:id', function(req,res){
-	// Grab URL PARAM ID
-	var id = req.params.id;
-
-	// Grab the body of the request
-	var formArticle = req.body.article;
-
-	// Find the article with that id
-	db.Article.find(id)
-	  .then(function(dbArticle){
-	  	// Update the article
-	  	dbArticle.updateAttributes(formArticle)
-	  	  .then(function(newArticle){
-	  	  	// Redirect to articles show page
-	  	  	res.redirect('/articles/'+newArticle.id);
-	  	  });
-	  });
+app.get('/progress', function(req,res) {
+	// First page of data input where organizations input/ update their company admin data into the "Org" table
+	db.Article.all() // then I render the article index template
+	  .then(function(batman){ // With articlesList as dbArticles
+	  	res.render('articles/index', {articlesList: batman});
+	  })
+  console.log("GET /articles");
 });
 
-// Creating delete action
-app.delete('/articles/:id', function(req,res){
-	// Grabbing the id from the URL Param ID
-	var id = req.params.id;
-
-	// Find the article with the id in the url
-	db.Article.find(id)
+app.post('/progress', function(req,res) {
+	var article = req.body.article;
+	db.Article.create(article)
 	  .then(function(dbArticle){
-	  	// Delete the article 
-	  	dbArticle.destroy()
-	  	  .then(function(){
-	  	  	// Send us articles home
-	  	  	res.redirect('/articles');
-	  	  });
-	  });
+	  	res.redirect('/articles');
+	  })
+  console.log(req.body);
 });
+
 
 app.get('/', function(req,res) {
   res.render('index.ejs');

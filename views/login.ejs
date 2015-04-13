@@ -1,14 +1,40 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <title><%= LOTUS Alliance %></title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<meta charset="UTF-8">
+	<title>LOTUS Alliance</title>
 </head>
 <body>
-    <h1><%= title %></h1>
-    <form action="/classmate" method="post">
-        <input type="text" name="name" placeholder="Name"> 
-        <input type="text" name="age" placeholder="Age">
-        <button type="submit">Submit</button>
-    </form>
+	<header>
+	  	<nav class="navbar navbar-default" role="navigation">
+	    	<div class="container-fluid">
+	        	<div class="navbar-header">
+	            	<a class="navbar-brand" href="/">LOTUS Alliance</a>
+	        	</div>
+		        	<ul class="nav navbar-nav">
+		            	<li><a href="/about">About</a></li>
+		            	<li><a href="/partners">Partners</a></li>
+		            	<li><a href="/login">Login</a></li>
+		            	<li><a href="/contact">Contact</a></li>
+		        	</ul>
+	    	</div>
+		</nav>
+	</header>
+
+  	<form method="post" action="/login">
+		<div>
+	    	<input type="text" name="org[username]" placeholder="Username">
+	    </div>
+	    <div>
+	    	<input type="text" name="org[password]" placeholder="Password">
+	    </div>
+	    </br>
+	    <button>Login</button>
+	</form>
 
 </body>
 </html>
