@@ -16,11 +16,14 @@ module.exports = function(sequelize, DataTypes) {
     newClients: DataTypes.INTEGER,
     dropoutClients: DataTypes.INTEGER,
     leftClients: DataTypes.INTEGER,
-    completedClients: DataTypes.INTEGER
+    completedClients: DataTypes.INTEGER,
+    orgId: DataTypes.INTEGER
   }, {
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
+        // Trying to make associations
+        // **** NOT WORKING YET *****
+        this.hasMany(models.Org);// associations can be defined here
       }
     }
   });

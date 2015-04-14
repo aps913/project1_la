@@ -4,7 +4,18 @@
 <body>
     <% include ../views/partials/nav.ejs %>
 	
-	<h1>Progress</h1>
+	<h1>Client Progress</h1>
+	<div class="container">
+		<h5> Please indicate the number of clients that fit the following descriptions regarding job training program standing.</h5>
+		<h6> Enter 0 for none of non-applicable.</h6>
+			<form method="post" action="/progress">
+		    <input type="integer" name="progress[newClients]" required="required" placeholder="New Clients"><br />
+		    <input type="integer" name="progress[dropoutClients]" required="required" placeholder="Left Program"><br />
+		    <input type="integer" name="progress[leftClients]"placeholder="Left CAST"><br />
+		    <input type="integer" name="progress[completedClients]" required="required" placeholder="Program Graduates"><br />
+	    <button>Save & Submit</button>
+	</form>
+	</div>
 	
 </body>
 </html>

@@ -26,6 +26,12 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     classMethods: {
+      associate: function(models) {
+        // associations can be defined here
+        // TRYING TO MAKE ASSOCIATIONS
+        //**** NOT WORKING YET *****
+        this.belongsTo(models.Progress);
+      },
       encryptPassword: function(password) {
         var hash = bcrypt.hashSync(password, salt);
         return hash;

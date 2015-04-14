@@ -141,6 +141,7 @@ app.post('/progress', function(req,res) {
 });
 
 app.get('/about', function(req,res) {
+	// PUT API CALL HERE!!!!
   res.render('about.ejs');
 });
 
@@ -154,5 +155,17 @@ app.get('/contact', function(req,res) {
 });
 
 
+// app.get('/sync', function(req, res) {
+// 	db.sequelize.sync( { force: true } ).then(function(){
+// 		res.send("DB synced successfully.");
+// 	})
+// })
+
+var server = app.listen(3000, function() {
+    // This part just adds a snazzy listening message:
+    console.log(new Array(51).join("*"));
+    console.log("\t LISTENING ON: \n\t\t localhost:3000");
+    console.log(new Array(51).join("*")); 
+});
 // Start the server on port 3000
-app.listen(3000);
+// app.listen(3000);

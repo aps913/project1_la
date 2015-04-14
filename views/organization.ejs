@@ -4,7 +4,17 @@
 <body>
     <% include ../views/partials/nav.ejs %>
 	
- <h1>organization</h1>
+ <h1>Organization Info</h1><br/>
+    <div class="container">
+    <h5>Please take a moment to update your contact information. Thank you.</h5>
+    <h6> Enter 0 for none of non-applicable.</h6>
+    <form method="post" action="/organization">
+    <input type="integer" name="org[orgName]" required="required" placeholder="Organization Name"><br />
+    <input type="integer" name="org[contactPerson]" required="required"placeholder="Contact Person"><br />
+    <input type="integer" name="org[email]" required="required" placeholder="Email"><br />
+    <button>Save & Submit</button>
+	</form>
+  </div>
 	
 </body>
 </html>
