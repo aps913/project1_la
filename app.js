@@ -19,26 +19,30 @@ app.use(session({
 }));
 
 app.use("/", function (req, res, next) {
-	req.login = function (user) {
-    req.session.userId = user.id;
-  };
+	req.session.orgId = req.session.orgId || null;
+	
+	req.login = function (org) {
+		console.log(org);
+		console.log("from app24");
+    	req.session.orgId = org.id;
+  	};
 
-  req.currentUser = function () {
+  req.currentOrg = function () {
     return db.Org.
       find({
         where: {
-          id: req.session.userId
+          id: req.session.orgId
        }
-      }).
-      then(function (user) {
-        req.user = user;
-        return user;
+      })
+      .then(function (org) {
+        req.org = org;
+        return org;
       })
   };
 
   req.logout = function () {
-    req.session.userId = null;
-    req.user = null;
+    req.session.orgId = null;
+    req.org = null;
   }
 
   next(); 
@@ -55,29 +59,61 @@ app.get('/', function (req, res) {
 });
 
 app.get("/login", function (req, res) {
-		req.currentUser().then(function(user){
-			console.log("Hello from login");
-			console.log(user);
-		if (user) {
-			res.redirect('/demographics');
-		} else {
-			res.render("login");
-		}
-	});
+	if(req.session.orgId){
+		res.redirect('/demographics');
+	}else {
+		res.render("login");
+	}
 });
+// 		console.log("fromapp60");
+// 		console.log(req.currentOrg);
+// 		req.currentOrg().then(function(org){
+// 			console.log("Hello from login");
+// 			console.log(org);
+// 		if (org) {
+// 			res.redirect('/demographics');
+// 		} else {
+// 			res.render("login");
+// 		}
+// 	});
+// });
 
 app.post("/login", function (req, res) {
-    var user = req.body.org.username;
-    var pass = req.body.org.password;
+    var username = req.body.org.username;
+    console.log("username:" + username)
+    var password = req.body.org.password;
+    console.log("pw:" + password);
     db.Org.
-    authenticate(user, pass).
-    then(function (dbUser) {
-        req.login(dbUser);
+    authenticate(username,password)
+	.then(function (dbOrg) {
+        if (dbOrg){
+        	req.login(dbOrg);
         res.render("demographics");
+    }else{
+    	res.redirect('/login');
+    }
     });
 });
 
+
+app.get("/organization", function(req, res) {
+	db.Org.find(req.session.orgId)
+		.then(function(dbOrg) {
+			res.render("organization", { org: dbOrg })
+		})
+})
+
+//update database using sequelize
+app.put("/organization/:id", function(req, res) {
+	var orgId = req.params.id;
+
+	var org = req.body.org;
+	// Finish this later
+	res.send("This is the org ID that was passed through:", orgId);
+
+})
 // app.get('/demographics', function(req,res) {
+
 // 	console.log("hello from demographics")
 // 	console.log(req.user);
 
@@ -102,9 +138,18 @@ app.post("/login", function (req, res) {
 // 	  res.render("demographics");
 // });
 
+app.get("/demographics", function(req, res) {
+	db.Org.find(req.session.orgId)
+		.then(function(dbOrg) {
+			res.render("demographics", { org: dbOrg })
+		})
+})
+
 app.post('/demographics', function(req,res) {
 	//pulls from form that is tied to progress table named on demographics.ejs
 	var demo = req.body.progress;
+	console.log(req.session.orgId)
+	demo.orgId = req.session.orgId;
 	//code taken from annie regarding posting data to a user
 	//progress.orgId = req.session.orgId;
 	// create a new progress based on info stored in demo variable
@@ -159,8 +204,4 @@ app.get('/contact', function(req,res) {
 // })
 
 var server = app.listen(process.env.PORT || 3000)
-    // This part just adds a snazzy listening message:
-    // console.log(new Array(51).join("*"));
-    // console.log("\t LISTENING ON: \n\t\t localhost:3000");
-    // console.log(new Array(51).join("*")); 
-// });
+

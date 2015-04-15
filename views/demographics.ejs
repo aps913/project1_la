@@ -8,7 +8,7 @@
 		<h1>Client Demographics</h1>
 		<div class="row">
 			<div class="col-md-6">
-				<form method="post" action="/demographics">
+				<form method="post" action="/demographics/<%= org.id %>?_method=PUT">
 				<h5> Please indicate the number of clients that fit the following descriptions regarding citizenship.</h5>
 				<h6> Enter 0 for none or non-applicable.</h6>
 				    <input type="integer" name="progress[maleUSCitizen]" required="required" placeholder="Male US Citizen"><br />

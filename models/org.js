@@ -57,12 +57,12 @@ module.exports = function(sequelize, DataTypes) {
             username: username
           }
         }) 
-        .then(function(user){
-          if (user === null){
+        .then(function(org){
+          if (Org === null){
             throw new Error("Username does not exist");
           }
-          else if (user.checkPassword(password)){
-            return user;
+          else if (org.checkPassword(password)){
+            return org;
           } else {
             return false;
           }

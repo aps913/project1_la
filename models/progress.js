@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
     dropoutClients: DataTypes.INTEGER,
     leftClients: DataTypes.INTEGER,
     completedClients: DataTypes.INTEGER,
-    //orgId: DataTypes.INTEGER
+    orgId: DataTypes.INTEGER
     //remove column orgID
   }, {
     classMethods: {

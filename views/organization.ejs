@@ -1,19 +1,16 @@
-<!DOCTYPE html>
-<html>
+
     <% include ../views/partials/header.ejs %>
-<body>
     <% include ../views/partials/nav.ejs %>
 	
  <h1>Organization Info</h1><br/>
     <div class="container">
     <h5>Please take a moment to update your contact information. Thank you.</h5>
-    <form method="post" action="/organization/:username">
-    <input type="string" name="org[orgName]" required="required" placeholder="Organization Name"><br />
-    <input type="string" name="org[contactPerson]" required="required"placeholder="Contact Person"><br />
-    <input type="string" name="org[email]" required="required" placeholder="Email"><br />
-    <button>Save & Submit</button>
+    <form method="post" action="/organization/<%= org.id %>?_method=PUT">
+    <input type="string" name="org[orgName]" required="required" placeholder="Enter an organization Name" value="<%= org.orgName %>"><br />
+    <input type="string" name="org[contactPerson]" required="required" placeholder="Enter a contact Person" value="<%= org.contactPerson %>"><br />
+    <input type="string" name="org[email]" required="required" placeholder="Enter an Email" value="<%= org.email %>"><br />
+    <button>Save &amp; Submit</button>
 	</form>
   </div>
 	
-</body>
-</html>
+    <% include ../views/partials/footer.ejs %>
