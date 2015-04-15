@@ -60,7 +60,7 @@ module.exports = function(sequelize, DataTypes) {
           else if (user.checkPassword(password)){
             return user;
           } else {
-            return "THE PASSWORD";
+            return false;
           }
 
         });

@@ -2,28 +2,21 @@
 var express = require("express"),
     ejs = require("ejs"),
     bodyParser = require("body-parser"),
-    methodOverride = require("method-override")
-    session = require("express-session");
-
-// Now instantiate our express app:
+    methodOverride = require("method-override"),
+    session = require("express-session"),
+    request = require('request');
+	
 var app = express();
 
-// Set the view engine to be "EJS"
-app.set('view engine', 'ejs');
-
-// Set up body parser
-app.use(bodyParser.urlencoded({extended: true}));
-
-// Set up method override to work with POST requests that have the parameter "_method=DELETE"
-app.use(methodOverride('_method'))
-
 var db = require("./models");
+
+app.set('view engine', 'ejs');
 
 app.use(session({
   secret: 'super secret',
   resave: false,
   saveUninitialized: true
-}))
+}));
 
 app.use("/", function (req, res, next) {
 	req.login = function (user) {
@@ -31,7 +24,7 @@ app.use("/", function (req, res, next) {
   };
 
   req.currentUser = function () {
-    return db.User.
+    return db.Org.
       find({
         where: {
           id: req.session.userId
@@ -51,14 +44,36 @@ app.use("/", function (req, res, next) {
   next(); 
 });
 
+app.use(bodyParser.urlencoded({extended: true}));
+
+app.use(methodOverride('_method'));
+
+app.use(express.static('public'));
 
 app.get('/', function (req, res) {
    res.render("index"); 
 });
 
 app.get("/login", function (req, res) {
-  res.render("login");
+		req.currentUser().then(function(user){
+			console.log("Hello from login");
+			console.log(user);
+		if (user) {
+			res.redirect('/organization');
+		} else {
+			res.render("login");
+		}
+	});
 });
+
+
+// 				console.log(req.user)
+// 				if (req.user !== undefined) {
+// 					res.redirect('/organization');
+// 				} else {
+// 					res.render("login");
+// 				}
+// });
 
 app.post("/login", function (req, res) {
     var user = req.body.org.username;
@@ -69,20 +84,56 @@ app.post("/login", function (req, res) {
     authenticate(user, pass).
     then(function (dbUser) {
         req.login(dbUser);
-        res.redirect("/organization");
+        res.redirect("organization");
     });
-})
-
-// app.get("/organization", function (req, res) {
-//   req.currentUser()
-//     .then(function (user) {
-//       res.render("/organization", {username: username});
-//     })
-// });
+});
 
 app.get('/organization', function(req,res) {
-	res.render("organization");
+					console.log("hello from organization")
+					console.log(req.user);
+
+		if (req.user !== false) {
+				res.render("organization");
+			} else {
+				res.redirect("login");
+			}
 });
+
+app.get('/something', function(req,res){
+	var city = req.query.city.split(" ").join("+");
+
+          //    "http://freedomcollaborative.org/api/organizations?city=san+francisco"
+	var url = "http://freedomcollaborative.org/api/organizations?city=san+francisco";
+	console.log(url);
+	if (city) {
+		request(url, function(err,resp,body){
+			console.log(resp);
+
+			if (!err && resp.statusCode === 200) {
+				var output = JSON.parse(body);
+				res.render('someview', {things: output});
+			}
+		});
+	} else {
+		res.render('someview', {things: []});
+	}
+});
+
+
+// 	var orgName = req.params.id;
+//   // var user = req.params.username;
+//   db.Org.find(orgName)
+//       .then(function(user) {
+//       		// if sesssion[:user_id].nil?
+//       		// res.render login page
+//       		// else
+//             res.render('organization', {user: user});
+//     });		
+// });
+
+// app.get('/organization', function(req,res) {
+// 	res.render("organization");
+// });
 	// First page of data input where organizations input/ update their company admin data into the "Org" table
 	// db.Article.all() // then I render the article index template
 	//   .then(function(batman){ // With articlesList as dbArticles

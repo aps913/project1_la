@@ -4,16 +4,19 @@
 <body>
 	<% include ../views/partials/nav.ejs %>
 
-  	<form method="post" action="/login">
-		<div>
-	    	<input type="text" name="org[username]" placeholder="Username">
-	    </div>
-	    <div>
-	    	<input type="text" name="org[password]" placeholder="Password">
-	    </div>
-	    </br>
-	    <button>Login</button>
-	</form>
+	<div class = "container">
+	  	<form method="post" action="/login">
+			<div>
+		    	<input type="text" name="org[username]" placeholder="Username">
+		    </div>
+		    <div>
+		    	<!--enter type="password" to be encoded versus plain text-->
+		    	<input type="text" name="org[password]" placeholder="Password">
+		    </div>
+		    </br>
+		    <button>Login</button>
+		</form>
+	</div>
 
 </body>
 </html>
