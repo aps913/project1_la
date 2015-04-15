@@ -43,6 +43,12 @@ var username = "lotusalliance"
 var password = "testdatabase"
 passwordDigest = $2a$10$vMPOIDYq9fQXG/AqEoHzeeVbE0hP9iLc0dBzmYiSjieu48LoaguwG
 
+var username = "testuser"
+var password = "password"
+passwordDigest = $2a$10$iebChv/qEkDo0.8/sh09QOuRvW641I9ea9AIgUfOixJlggmNHoK9C
+
+db.Org.create({username: "testuser", passwordDigest: "2$2a$10$iebChv/qEkDo0.8/sh09QOuRvW641I9ea9AIgUfOixJlggmNHoK9C", orgName:"LA", contactPerson:"test", email:"test@lotusalliance.org"})
+
 curl -i http://www.freedomcollaborative.org/api
 HTTP/1.1 200 OK
 Server: Cowboy
@@ -62,4 +68,25 @@ X-Runtime: 0.372668
 Via: 1.1 vegur
 
 {"links":{"organizations":"http://www.freedomcollaborative.org/api/organizations{?accepts_volunteers,organization_type,good_practices,demographic,services,actions,religious_affiliation,state,city,name}"}}
+
+//Code for pulling from freedom collaborative api
+app.get('/something', function(req,res){
+	var city = req.query.city.split(" ").join("+");
+
+          //    "http://freedomcollaborative.org/api/organizations?city=san+francisco"
+	var url = "http://freedomcollaborative.org/api/organizations?city=san+francisco";
+	console.log(url);
+	if (city) {
+		request(url, function(err,resp,body){
+			console.log(resp);
+
+			if (!err && resp.statusCode === 200) {
+				var output = JSON.parse(body);
+				res.render('someview', {things: output});
+			}
+		});
+	} else {
+		res.render('someview', {things: []});
+	}
+});
 

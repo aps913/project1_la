@@ -18,7 +18,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     orgName: DataTypes.STRING,
     contactPerson: DataTypes.STRING,
-    email: DataTypes.STRING
+    email: DataTypes.STRING,
+    ProgressId: DataTypes.INTEGER
+
+    //add column in sequelize
+    //ProgressId needs to exist within the child table
   }, {
     instanceMethods: {
       checkPassword: function(password) {
@@ -30,7 +34,7 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
         // TRYING TO MAKE ASSOCIATIONS
         //**** NOT WORKING YET *****
-        this.belongsTo(models.Progress);
+        this.hasMany(models.Progress);
       },
       encryptPassword: function(password) {
         var hash = bcrypt.hashSync(password, salt);
