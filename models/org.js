@@ -19,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
     orgName: DataTypes.STRING,
     contactPerson: DataTypes.STRING,
     email: DataTypes.STRING,
-    ProgressId: DataTypes.INTEGER
+    
 
     //add column in sequelize
     //ProgressId needs to exist within the child table

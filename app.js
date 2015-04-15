@@ -59,7 +59,7 @@ app.get("/login", function (req, res) {
 			console.log("Hello from login");
 			console.log(user);
 		if (user) {
-			res.redirect('/organization');
+			res.redirect('/demographics');
 		} else {
 			res.render("login");
 		}
@@ -69,22 +69,20 @@ app.get("/login", function (req, res) {
 app.post("/login", function (req, res) {
     var user = req.body.org.username;
     var pass = req.body.org.password;
-    console.log("REQ.body", req.body);
-    
     db.Org.
     authenticate(user, pass).
     then(function (dbUser) {
         req.login(dbUser);
-        res.redirect("/demographics");
+        res.render("demographics");
     });
 });
 
-// app.get('/organization', function(req,res) {
-// 	console.log("hello from organization")
+// app.get('/demographics', function(req,res) {
+// 	console.log("hello from demographics")
 // 	console.log(req.user);
 
 // 	if (req.user !== false) {
-// 			res.render("organization");
+// 			res.render("demographics");
 // 		} else {
 // 			res.redirect("login");
 // 		}
@@ -92,23 +90,23 @@ app.post("/login", function (req, res) {
 
 
 // app.post('/organization', function(req,res) {
-// 	var  = req.body.article;
-// 	db.Progress.create(article)
+// 	var  = req.body.org;
+// 	db.Progress.create()
 // 	  .then(function(dbProgress){
 // 	  	res.redirect('/');
 // 	  })
 //   console.log(req.body);
 // });
-//SEVEN CRUD ROUTES FOR demographics
-
-app.get('/demographics', function(req,res) {
-	  res.render("demographics");
-});
-
+//made /demographics inaccessible from public route.
+// app.get('/demographics', function(req,res) {
+// 	  res.render("demographics");
+// });
 
 app.post('/demographics', function(req,res) {
 	//pulls from form that is tied to progress table named on demographics.ejs
 	var demo = req.body.progress;
+	//code taken from annie regarding posting data to a user
+	//progress.orgId = req.session.orgId;
 	// create a new progress based on info stored in demo variable
 	db.Progress.create(demo)
 		// then in a new function, render the progress.ejs page and make the newly created instance of progress (dbProgress) available on the progress.ejs page through a variable named progress (first argument)
@@ -160,9 +158,9 @@ app.get('/contact', function(req,res) {
 // 	})
 // })
 
-var server = app.listen(3000, function() {
+var server = app.listen(process.env.PORT || 3000)
     // This part just adds a snazzy listening message:
-    console.log(new Array(51).join("*"));
-    console.log("\t LISTENING ON: \n\t\t localhost:3000");
-    console.log(new Array(51).join("*")); 
-});
+    // console.log(new Array(51).join("*"));
+    // console.log("\t LISTENING ON: \n\t\t localhost:3000");
+    // console.log(new Array(51).join("*")); 
+// });
