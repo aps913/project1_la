@@ -4,30 +4,43 @@
 <body>
     <% include ../views/partials/nav.ejs %>
 	
-	<h1>Client Demographics</h1>
 	<div class="container">
-	<form method="post" action="/organizations">
-		<h5> Please indicate the number of clients that fit the following descriptions regarding citizenship.</h5>
-		<h6> Enter 0 for none or non-applicable.</h6>
-		    <input type="integer" name="progress[maleUSCitizen]" required="required" placeholder="Male US Citizen"><br />
-		    <input type="integer" name="progress[maleForeignCitizen]" required="required" placeholder="Male Foreign Citizen"><br />
-		    <input type="integer" name="progress[femaleUSCitizen]" required="required" placeholder="Female US Citizen"><br />
-		    <input type="integer" name="progress[femaleForeignCitizen]" required="required" placeholder="Female Foreign Citizen"><br />
-		    <!--   <input type="integer" name="progress[femaleForeignCitizen]" placeholder="Female Foreign Citizen"><br /> -->
-
-		<h5> Please indicate the number of clients that fit the following descriptions regarding type of exploitation.</h5>
-		<h6> Enter 0 for none or non-applicable.</h6>
-		    <input type="integer" name="progress[maleDebtLaborBond]" required="required" placeholder="Male Debt/ Labor Bondage"><br />
-		    <input type="integer" name="progress[maleForcedLabor]" required="required" placeholder="Male Forced Labor"><br />
-		    <input type="integer" name="progress[maleSexTrafficked]" required="required" placeholder="Male Sex Trafficked"><br />
-		    <input type="integer" name="progress[malesMultiple]" required="required" placeholder="Male Multiple Forms"><br />
-		    <input type="integer" name="progress[femaleDebtLaborBond]" required="required" placeholder="Female Debt/ Labor Bondage"><br />
-		    <input type="integer" name="progress[femaleForcedLabor]" required="required" placeholder="Female Forced Labor"><br />
-		    <input type="integer" name="progress[femaleSexTrafficked]" required="required" placeholder="Female Sex Trafficked"><br />
-		    <input type="integer" name="progress[femalesMultiple]" required="required" placeholder="Female Multiple Forms"><br />
-	    
-	    <button>Save & Submit</button>
-	</form>
+		<h1>Client Demographics</h1>
+		<div class="row">
+			<div class="col-md-6">
+				<form method="post" action="/demographics">
+				<h5> Please indicate the number of clients that fit the following descriptions regarding citizenship.</h5>
+				<h6> Enter 0 for none or non-applicable.</h6>
+				    <input type="integer" name="progress[maleUSCitizen]" required="required" placeholder="Male US Citizen"><br />
+				    <input type="integer" name="progress[maleForeignCitizen]" required="required" placeholder="Male Foreign Citizen"><br />
+				    <input type="integer" name="progress[femaleUSCitizen]" required="required" placeholder="Female US Citizen"><br />
+				    <input type="integer" name="progress[femaleForeignCitizen]" required="required" placeholder="Female Foreign Citizen"><br />
+				    <!--   <input type="integer" name="progress[femaleForeignCitizen]" placeholder="Female Foreign Citizen"><br /> -->
+			</div>
+			<div class="col-md-6">
+				<h5> Please indicate the number of clients that fit the following descriptions regarding type of exploitation.</h5>
+				<h6> Enter 0 for none or non-applicable.</h6>
+				    <input type="integer" name="progress[maleDebtLaborBond]" required="required" placeholder="Male Debt/ Labor Bondage"><br />
+				    <input type="integer" name="progress[maleForcedLabor]" required="required" placeholder="Male Forced Labor"><br />
+				    <input type="integer" name="progress[maleSexTrafficked]" required="required" placeholder="Male Sex Trafficked"><br />
+				    <input type="integer" name="progress[malesMultiple]" required="required" placeholder="Male Multiple Forms"><br />
+				    <input type="integer" name="progress[femaleDebtLaborBond]" required="required" placeholder="Female Debt/ Labor Bondage"><br />
+				    <input type="integer" name="progress[femaleForcedLabor]" required="required" placeholder="Female Forced Labor"><br />
+				    <input type="integer" name="progress[femaleSexTrafficked]" required="required" placeholder="Female Sex Trafficked"><br />
+				    <input type="integer" name="progress[femalesMultiple]" required="required" placeholder="Female Multiple Forms">
+				    
+			    <h5> Please indicate the number of clients that fit the following descriptions regarding job training program standing.</h5>
+				<h6> Enter 0 for none or non-applicable.</h6>
+					<form method="post" action="/progress">
+				    <input type="integer" name="progress[newClients]" required="required" placeholder="New Clients"><br />
+				    <input type="integer" name="progress[dropoutClients]" required="required" placeholder="Left Program"><br />
+				    <input type="integer" name="progress[leftClients]"placeholder="Left CAST"><br />
+				    <input type="integer" name="progress[completedClients]" required="required" placeholder="Program Graduates"><br />
+			    
+			    <button>Save & Submit</button>
+				</form>
+			</div>
+		</div>
 	</div>
 	
 </body>

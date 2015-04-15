@@ -66,15 +66,6 @@ app.get("/login", function (req, res) {
 	});
 });
 
-
-// 				console.log(req.user)
-// 				if (req.user !== undefined) {
-// 					res.redirect('/organization');
-// 				} else {
-// 					res.render("login");
-// 				}
-// });
-
 app.post("/login", function (req, res) {
     var user = req.body.org.username;
     var pass = req.body.org.password;
@@ -84,96 +75,53 @@ app.post("/login", function (req, res) {
     authenticate(user, pass).
     then(function (dbUser) {
         req.login(dbUser);
-        res.redirect("organization");
+        res.redirect("/demographics");
     });
 });
 
-app.get('/organization', function(req,res) {
-					console.log("hello from organization")
-					console.log(req.user);
-
-		if (req.user !== false) {
-				res.render("organization");
-			} else {
-				res.redirect("login");
-			}
-});
-
-app.get('/something', function(req,res){
-	var city = req.query.city.split(" ").join("+");
-
-          //    "http://freedomcollaborative.org/api/organizations?city=san+francisco"
-	var url = "http://freedomcollaborative.org/api/organizations?city=san+francisco";
-	console.log(url);
-	if (city) {
-		request(url, function(err,resp,body){
-			console.log(resp);
-
-			if (!err && resp.statusCode === 200) {
-				var output = JSON.parse(body);
-				res.render('someview', {things: output});
-			}
-		});
-	} else {
-		res.render('someview', {things: []});
-	}
-});
-
-
-// 	var orgName = req.params.id;
-//   // var user = req.params.username;
-//   db.Org.find(orgName)
-//       .then(function(user) {
-//       		// if sesssion[:user_id].nil?
-//       		// res.render login page
-//       		// else
-//             res.render('organization', {user: user});
-//     });		
-// });
-
 // app.get('/organization', function(req,res) {
-// 	res.render("organization");
-// });
-	// First page of data input where organizations input/ update their company admin data into the "Org" table
-	// db.Article.all() // then I render the article index template
-	//   .then(function(batman){ // With articlesList as dbArticles
-	//   	res.render('articles/index', {articlesList: batman});
-	//   })
-//   console.log("GET /articles");
+// 	console.log("hello from organization")
+// 	console.log(req.user);
+
+// 	if (req.user !== false) {
+// 			res.render("organization");
+// 		} else {
+// 			res.redirect("login");
+// 		}
 // });
 
-app.post('/organization', function(req,res) {
-	var article = req.body.article;
-	db.Article.create(article)
-	  .then(function(dbArticle){
-	  	res.redirect('/articles');
-	  })
-  console.log(req.body);
-});
+
+// app.post('/organization', function(req,res) {
+// 	var  = req.body.article;
+// 	db.Progress.create(article)
+// 	  .then(function(dbProgress){
+// 	  	res.redirect('/');
+// 	  })
+//   console.log(req.body);
+// });
+//SEVEN CRUD ROUTES FOR demographics
 
 app.get('/demographics', function(req,res) {
 	  res.render("demographics");
 });
-// 	// First page of data input where organizations input/ update their company admin data into the "Org" table
-// 	db.Article.all() // then I render the article index template
-// 	  .then(function(batman){ // With articlesList as dbArticles
-// 	  	res.render('articles/index', {articlesList: batman});
-// 	  })
-//   console.log("Loaded demographics");
-// });
+
 
 app.post('/demographics', function(req,res) {
-	var article = req.body.article;
-	db.Article.create(article)
-	  .then(function(dbArticle){
-	  	res.redirect('/articles');
+	//pulls from form that is tied to progress table named on demographics.ejs
+	var demo = req.body.progress;
+	// create a new progress based on info stored in demo variable
+	db.Progress.create(demo)
+		// then in a new function, render the progress.ejs page and make the newly created instance of progress (dbProgress) available on the progress.ejs page through a variable named progress (first argument)
+	  .then(function(dbProgress){
+	  	res.render('progress', {progress: dbProgress});
 	  })
   console.log(req.body);
 });
 
-app.get('/progress', function(req,res) {
-	res.render("progress");
-});
+// app.get('/progress', function(req,res) {
+// 	res.render("progress");
+// });
+
 	// First page of data input where organizations input/ update their company admin data into the "Org" table
 // 	db.Article.all() // then I render the article index template
 // 	  .then(function(batman){ // With articlesList as dbArticles
@@ -218,5 +166,3 @@ var server = app.listen(3000, function() {
     console.log("\t LISTENING ON: \n\t\t localhost:3000");
     console.log(new Array(51).join("*")); 
 });
-// Start the server on port 3000
-// app.listen(3000);
